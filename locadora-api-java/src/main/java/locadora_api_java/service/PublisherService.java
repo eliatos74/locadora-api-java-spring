@@ -60,7 +60,7 @@ public class PublisherService {
         Sort sorted = Sort.by(Sort.Direction.fromString(direction), sort);
         Pageable pageable = PageRequest.of(page, size, sorted);
 
-        Page<Publisher> publishers = publisherRepository.findByNameContainingIgnoreCase(search, pageable);
+        Page<Publisher> publishers = publisherRepository.searchPublishers(search, pageable);
 
         List<PublisherResponseDTO> publisherResponses = publishers.getContent().stream()
                 .map(publisher -> new PublisherResponseDTO(

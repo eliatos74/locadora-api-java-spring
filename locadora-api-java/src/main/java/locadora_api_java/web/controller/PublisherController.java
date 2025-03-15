@@ -40,7 +40,7 @@ public class PublisherController {
     }
 
     @PutMapping
-    public ResponseEntity<PublisherResponseDTO> updatePublisher(@RequestBody PublisherUpdateDTO request) {
+    public ResponseEntity<PublisherResponseDTO> updatePublisher(@Valid @RequestBody PublisherUpdateDTO request) {
         Publisher publisher = publisherService.updatePublisher(request.id(), publisherMapper.toPublisher(new PublisherDTO(request.name(), request.email(), request.telephone(), request.site())));
         var response = publisherMapper.toDTO(publisher);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
