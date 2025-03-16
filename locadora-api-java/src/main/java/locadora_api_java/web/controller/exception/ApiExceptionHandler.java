@@ -17,6 +17,18 @@ public class ApiExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
+    @ExceptionHandler(RenterCPFNumberAlreadyExists.class)
+    public ResponseEntity<ErrorMessage> renterCPFNumberAlreadyExists(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
     @ExceptionHandler(BookIsCurrentlyRentedException.class)
     public ResponseEntity<ErrorMessage> bookIsCurrentlyRentedException(
             RuntimeException ex,
