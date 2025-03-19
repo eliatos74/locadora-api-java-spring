@@ -2,10 +2,7 @@ package locadora_api_java.service;
 
 
 import locadora_api_java.entity.Book;
-import locadora_api_java.exception.BookIsCurrentlyRentedException;
-import locadora_api_java.exception.BookNameAlreadyExists;
-import locadora_api_java.exception.BookTotalQuantityCannotBeDecreased;
-import locadora_api_java.exception.EntityNotFoundException;
+import locadora_api_java.exception.*;
 import locadora_api_java.repository.BookRepository;
 import locadora_api_java.web.controller.dto.book.BookPaginatedResponseDTO;
 import locadora_api_java.web.controller.dto.book.BookResponseInfoDTO;
@@ -33,7 +30,7 @@ public class BookService {
         var publisher = publisherService.findId(book.getPublisherId());
         try {
             book.setAvailableQuantity(book.getTotalQuantity());
-            book.setInUseQuantity(0l);
+            book.setInUseQuantity(0L);
             return bookRepository.save(book);
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
             throw new BookNameAlreadyExists(String.format("Livro com o nome (%s) ja existe", book.getName()));
@@ -72,6 +69,26 @@ public class BookService {
 
     private Long calculateAvailableQuantity(Long newTotal, Long inUseQuantity) {
         return newTotal - inUseQuantity;
+    }
+
+    public void updateBookOnRent(Long id) {
+        Book bookToUpdate = findId(id);
+
+        if (bookToUpdate.getInUseQuantity() == bookToUpdate.getTotalQuantity()) {
+            throw new BookOutOfStockException("Livro sem estoque.");
+        }
+
+        bookToUpdate.setInUseQuantity(bookToUpdate.getInUseQuantity() + 1L);
+        bookToUpdate.setAvailableQuantity(bookToUpdate.getAvailableQuantity() - 1L);
+
+    }
+
+    public void updateBookOnReturn(Long id) {
+        Book bookToUpdate = findId(id);
+
+        bookToUpdate.setAvailableQuantity(bookToUpdate.getAvailableQuantity() + 1L);
+        bookToUpdate.setInUseQuantity(bookToUpdate.getInUseQuantity() - 1L);
+
     }
 
     public void deleteBook(Long id) {

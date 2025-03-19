@@ -17,6 +17,66 @@ public class ApiExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
+    @ExceptionHandler(RankPositionNotFoundException.class)
+    public ResponseEntity<ErrorMessage> rankPositionNotFoundException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(RentNotFound.class)
+    public ResponseEntity<ErrorMessage> rentNotFound(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(PendingRentException.class)
+    public ResponseEntity<ErrorMessage> pendingRentException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidDevolutionDateException.class)
+    public ResponseEntity<ErrorMessage> invalidDevolutionDateException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(BookOutOfStockException.class)
+    public ResponseEntity<ErrorMessage> bookOutOfStockException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
     @ExceptionHandler(RenterCPFNumberAlreadyExists.class)
     public ResponseEntity<ErrorMessage> renterCPFNumberAlreadyExists(
             RuntimeException ex,

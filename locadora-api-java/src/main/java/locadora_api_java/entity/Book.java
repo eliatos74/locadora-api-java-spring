@@ -107,4 +107,18 @@ public class Book {
     public void setPublisherId(Long publisherId) {
         this.publisherId = publisherId;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", totalQuantity=" + totalQuantity +
+                ", availableQuantity=" + availableQuantity +
+                ", inUseQuantity=" + inUseQuantity +
+                ", lauchDate=" + lauchDate +
+                ", publisherId=" + publisherId +
+                '}';
+    }
 }
