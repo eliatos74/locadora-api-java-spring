@@ -1,5 +1,6 @@
 package locadora_api_java.service;
 
+import jakarta.annotation.PostConstruct;
 import locadora_api_java.entity.Rent;
 import locadora_api_java.enums.RentStatus;
 import locadora_api_java.exception.InvalidDevolutionDateException;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -69,6 +72,25 @@ public class RentService {
             throw new RankPositionNotFoundException(String.format("não foi encontrado nenhum livro para a posição de rank: %S", position));
         }
         return result;
+    }
+
+    @PostConstruct
+    @Transactional
+    public void updatStatusWhenStartingApplication() {
+        updateStatusRentsOverdue();
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    public void updateStatusRentsOverdue() {
+        LocalDate today = LocalDate.now();
+
+        List<Rent> overdueRents = rentRepository.findByDeadLineDateBeforeAndStatus(LocalDate.now(), RentStatus.IN_TIME);
+        for (Rent rent : overdueRents) {
+            rent.setStatus(RentStatus.DELAYED);
+        }
+
+        rentRepository.saveAll(overdueRents);
     }
 
     public RentPaginatedResponseDTO<RentResponseDTO> getFilteredRent(String search, RentStatus status, Integer page, Integer size, String sort, String direction) {

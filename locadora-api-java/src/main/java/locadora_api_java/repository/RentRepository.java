@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public interface RentRepository extends JpaRepository<Rent, Long> {
 
     boolean existsByRenterIdAndBookId(Long renterId, Long bookId);
@@ -57,4 +60,5 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
             """)
     Page<RentRentersResponseDTO> findRenterRentStats(@Param("search") String search, Pageable pageable);
 
+    List<Rent> findByDeadLineDateBeforeAndStatus(LocalDate now, RentStatus rentStatus);
 }
