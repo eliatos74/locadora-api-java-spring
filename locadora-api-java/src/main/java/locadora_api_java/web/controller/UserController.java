@@ -3,8 +3,6 @@ package locadora_api_java.web.controller;
 import jakarta.validation.Valid;
 import locadora_api_java.entity.User;
 import locadora_api_java.service.UserService;
-import locadora_api_java.web.controller.dto.book.BookPaginatedResponseDTO;
-import locadora_api_java.web.controller.dto.book.BookResponseInfoDTO;
 import locadora_api_java.web.controller.dto.user.*;
 import locadora_api_java.web.controller.dto.user.mapper.UserMapper;
 import org.springframework.http.HttpStatus;
@@ -60,5 +58,15 @@ public class UserController {
     ) {
         var response = userService.getFilteredUser(search, page, size, sort, direction);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/recovery/requestRecoveryMail")
+    public void sendEmail(@Valid @RequestBody UserEmail userEmail) {
+        userService.sendEmail(userEmail);
+    }
+
+    @PostMapping("/recovery/changePassword")
+    public void changePassword(@Valid @RequestBody UserChangePasswordDTO request) {
+        userService.changePassword(request.newPassword(), request.repeatPassword(), request.email(), request.otpCode());
     }
 }

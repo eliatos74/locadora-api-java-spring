@@ -1,5 +1,7 @@
 package locadora_api_java.repository;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import locadora_api_java.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 )
             """)
     Page<User> searchUsers(@Param("search") String search, Pageable pageable);
+
+    User findUserByEmail(String email);
 }

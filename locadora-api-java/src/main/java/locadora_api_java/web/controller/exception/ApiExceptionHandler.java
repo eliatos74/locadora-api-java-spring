@@ -17,6 +17,54 @@ public class ApiExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
+    @ExceptionHandler(CodeInvalidOrExpired.class)
+    public ResponseEntity<ErrorMessage> codeInvalidOrExpired(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<ErrorMessage> passwordMismatchException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(EmailSendingException.class)
+    public ResponseEntity<ErrorMessage> emailSendingException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(UserByEmailNotFoundException.class)
+    public ResponseEntity<ErrorMessage> userByEmailNotFoundException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        log.error("Api error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
     @ExceptionHandler(RankPositionNotFoundException.class)
     public ResponseEntity<ErrorMessage> rankPositionNotFoundException(
             RuntimeException ex,
