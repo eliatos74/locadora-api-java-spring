@@ -60,7 +60,11 @@ public class RentService {
         );
 
         bookService.updateBookOnReturn(rent.getBookId());
-        rent.setStatus(RentStatus.DELIVERED);
+        if (rent.getStatus() == RentStatus.IN_TIME) {
+            rent.setStatus(RentStatus.DELIVERED);
+        } else if (rent.getStatus() == RentStatus.DELAYED) {
+            rent.setStatus(RentStatus.DELIVERED_WITH_DELAY);
+        }
         rent.setDevolutionDate(LocalDate.now());
 
         rentRepository.save(rent);
