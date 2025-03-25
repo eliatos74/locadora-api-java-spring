@@ -1,12 +1,9 @@
 package locadora_api_java.web.controller.dto.publisher;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record PublisherUpdateDTO(
-        @NotBlank
+        @NotNull
         Long id,
 
         @Size(min = 1, max = 50)

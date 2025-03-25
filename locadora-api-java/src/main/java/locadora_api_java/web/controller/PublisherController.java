@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("publishers")
 public class PublisherController {
@@ -54,7 +54,7 @@ public class PublisherController {
 
     @GetMapping
     public ResponseEntity<PublisherPaginatedResponseDTO<PublisherResponseDTO>> getAllPublishers(
-            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "search", defaultValue = "") String search,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -62,5 +62,4 @@ public class PublisherController {
         var response = publisherService.getFilteredPublisher(search, page, size, sort, direction);
         return ResponseEntity.ok(response);
     }
-
 }
