@@ -3,6 +3,7 @@ package locadora_api_java.repository;
 import locadora_api_java.entity.Rent;
 import locadora_api_java.enums.RentStatus;
 import locadora_api_java.web.controller.dto.rent.RentMostRentendResponseDTO;
+import locadora_api_java.web.controller.dto.rent.RentRankindDTO;
 import locadora_api_java.web.controller.dto.rent.RentRentersResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,14 +25,14 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
 //    ORDER BY rentedNumber DESC
 //    LIMIT 1 OFFSET 1;
     @Query("""
-            SELECT new locadora_api_java.web.controller.dto.rent.RentMostRentendResponseDTO(b.name, COUNT(r))
+            SELECT new locadora_api_java.web.controller.dto.rent.RentRankindDTO(b.name, COUNT(r))
             FROM Rent r
             JOIN Book b ON r.bookId = b.id
             GROUP BY r.bookId, b.name
             ORDER BY COUNT(r) DESC
             LIMIT 1 OFFSET :position
             """)
-    RentMostRentendResponseDTO findBookByRank(@Param("position") Long position);
+    RentRankindDTO findBookByRank(@Param("position") Long position);
 
     @Query("""
                 SELECT r FROM Rent r

@@ -8,10 +8,7 @@ import locadora_api_java.exception.PendingRentException;
 import locadora_api_java.exception.RankPositionNotFoundException;
 import locadora_api_java.exception.RentNotFound;
 import locadora_api_java.repository.RentRepository;
-import locadora_api_java.web.controller.dto.rent.RentMostRentendResponseDTO;
-import locadora_api_java.web.controller.dto.rent.RentPaginatedResponseDTO;
-import locadora_api_java.web.controller.dto.rent.RentRentersResponseDTO;
-import locadora_api_java.web.controller.dto.rent.RentResponseDTO;
+import locadora_api_java.web.controller.dto.rent.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,7 +67,7 @@ public class RentService {
         rentRepository.save(rent);
     }
 
-    public RentMostRentendResponseDTO mostBookRented(Long position) {
+    public RentRankindDTO mostBookRented(Long position) {
         var result = rentRepository.findBookByRank(position - 1);
         if (result == null) {
             throw new RankPositionNotFoundException(String.format("não foi encontrado nenhum livro para a posição de rank: %S", position));

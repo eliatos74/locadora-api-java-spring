@@ -34,8 +34,8 @@ public class RentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("mostRentedBook/{position}")
-    public ResponseEntity<RentMostRentendResponseDTO> mostRentedBook(@PathVariable Long position) {
+    @GetMapping("/most-rented/{position}")
+    public ResponseEntity<RentRankindDTO> mostRentedBook(@PathVariable Long position) {
         var rankedBook = rentService.mostBookRented(position);
         return ResponseEntity.ok(rankedBook);
     }
