@@ -4,6 +4,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.constraints.NotNull;
 import locadora_api_java.entity.User;
+import locadora_api_java.enums.UserRole;
 import locadora_api_java.exception.*;
 import locadora_api_java.repository.UserRepository;
 import locadora_api_java.web.controller.dto.user.UserEmail;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +28,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final CodeService codeService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, JavaMailSender mailSender, CodeService codeService) {
+    public UserService(UserRepository userRepository, JavaMailSender mailSender, CodeService codeService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.codeService = codeService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User createUser(User user) {
         try {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
-            throw new EmailUniqueViolationException(String.format("Email %s ja existe", user.getEmail()));
+            throw new NameUniqueViolationException(String.format("nome %s ja existe", user.getEmail()));
         }
     }
 
@@ -128,19 +133,33 @@ public class UserService {
     }
 
     public void changePassword(String newPassword, String repeatPassword, String email, Long otpCode) {
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new UserByEmailNotFoundException(String.format("usuario com email %s não encontrado", email));
+
+        }
+
         if (!newPassword.equals(repeatPassword)) {
             throw new PasswordMismatchException("as senhas não confere");
         }
 
-        User user = userRepository.findUserByEmail(email);
-        if (user == null) {
-            throw new UserByEmailNotFoundException(String.format("usuario com email %s não encontrado", email));
-        }
-
         codeService.checkCode(user, otpCode);
 
-        user.setPassword(newPassword);
+        String hashedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(hashedPassword);
 
         userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserName(String name) {
+        return userRepository.findByName(name).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Usuário com nome %s não encontrado", name))
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public UserRole findRoleByName(String name) {
+        return userRepository.findRoleByName(name);
     }
 }

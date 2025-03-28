@@ -36,7 +36,7 @@ public class UserMapper {
         return new UserResponseDTO(
                 user.getId(),
                 user.getName(),
-                user.getPassword(),
+                user.getEmail(),
                 user.getRole().toString()
         );
     }

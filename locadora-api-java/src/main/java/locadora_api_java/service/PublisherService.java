@@ -1,8 +1,7 @@
 package locadora_api_java.service;
 
-import jakarta.validation.constraints.NotBlank;
 import locadora_api_java.entity.Publisher;
-import locadora_api_java.exception.EmailUniqueViolationException;
+import locadora_api_java.exception.NameUniqueViolationException;
 import locadora_api_java.exception.EntityNotFoundException;
 import locadora_api_java.repository.PublisherRepository;
 import locadora_api_java.web.controller.dto.publisher.PublisherPaginatedResponseDTO;
@@ -30,7 +29,7 @@ public class PublisherService {
         try {
             return publisherRepository.save(publisher);
         } catch (org.springframework.dao.DataIntegrityViolationException ex) {
-            throw new EmailUniqueViolationException(String.format("Email %s ja existe", publisher.getEmail()));
+            throw new NameUniqueViolationException(String.format("Email %s ja existe", publisher.getEmail()));
         }
     }
 

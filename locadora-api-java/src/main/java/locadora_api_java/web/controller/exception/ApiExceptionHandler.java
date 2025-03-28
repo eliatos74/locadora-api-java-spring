@@ -185,7 +185,7 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
-    @ExceptionHandler(EmailUniqueViolationException.class)
+    @ExceptionHandler(NameUniqueViolationException.class)
     public ResponseEntity<ErrorMessage> emailUniqueViolationException(
             RuntimeException ex,
             HttpServletRequest request
